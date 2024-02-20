@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% block title %}{{ post.name }}{% endblock %}
+
+    <h1>{{ post.name }}</h1>
+    <a href="{{ url_for('edit', post_id=post.id) }}">Edit</a>
+    <p>Author: {{ post.author }}</p>
+    <p>Category: {{ post.category }}</p>
+    <p>Description: {{ post.description }}</p>
+    <p>Ingredients: {{ post.ingredients }}</p>
+    <p>Preparation time: {{ post.preparation_time }}</p>
+    <p>Instructions: {{ post.instructions }}</p>
+
+    {% for image_path in post['images'] %}
+    <img src="{{ url_for('static', filename='images/' + image_path.split('\\')[-1]) }}" alt="Recipe Image">
+{% endfor %}
+
+    <h2>Comments</h2>
+    {% if not post.comments %}
+        <p>No comments available.</p>
+    {% else %}
+        <ul>
+            {% for comment in post.comments %}
+                <li>{{ comment.content }} - {{ comment.author }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+<h2>Add a comment:</h2>
+<form method="POST" action="{{ url_for('add_comment', post_id=post.id) }}">
+    <textarea name="content" rows="4" cols="50"></textarea><br>
+    <input type="text" name="author" placeholder="Your Name"><br>
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock %}
